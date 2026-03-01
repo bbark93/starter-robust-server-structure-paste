@@ -32,7 +32,7 @@ app.post("/pastes", (req, res, next) => {
     user_id,
   };
   pastes.push(newPaste);
-  res.json({ data: newPaste });
+  res.status(201).json({ data: newPaste });
 });
 
 // Not found handler
