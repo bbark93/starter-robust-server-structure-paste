@@ -18,6 +18,23 @@ app.get("/pastes", (req, res) => {
   res.json({ data: pastes });
 });
 
+let lastPasteId = pastes.reduce((maxId, paste) => Math.max(maxId, paste.id), 0);
+
+app.post("/pastes", (req, res, next) => {
+  const { data: { name, syntax, exposure, expiration, text, user_id } = {} } = req.body;
+  const newPaste = {
+    id: ++lastPasteId, // Increment last ID, then assign as the current ID
+    name,
+    syntax,
+    exposure,
+    expiration,
+    text,
+    user_id,
+  };
+  pastes.push(newPaste);
+  res.json({ data: newPaste });
+});
+
 // Not found handler
 app.use((request, response, next) => {
   next(`Not found: ${request.originalUrl}`);
