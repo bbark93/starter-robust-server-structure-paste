@@ -23,7 +23,10 @@ function bodyHasTextProperty(req, res, next) {
   if (text) {
     return next(); // Call `next()` without an error message if the result exists
   }
-  next("A 'text' property is required.");
+  next({
+    status: 400,
+    message: "A 'text' property is required."
+  });
 }
 
 let lastPasteId = pastes.reduce((maxId, paste) => Math.max(maxId, paste.id), 0);
@@ -51,9 +54,10 @@ app.use((request, response, next) => {
 });
 
 // Error handler
-app.use((error, request, response, next) => {
+app.use((error, req, res, next) => {
   console.error(error);
-  response.send(error);
+  const { status = 500, message = "Something went wrong!" } = error;
+  res.status(status).json({ error: message });
 });
 
 module.exports = app;
