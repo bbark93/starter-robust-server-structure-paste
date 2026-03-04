@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const pastes = require("./data/pastes-data");
+const pastesRouter = require("./pastes/pastes.router");
 
 // TODO: Follow instructions in the checkpoint to implement ths API.
 app.use("/pastes/:pasteId", (req, res, next) => {
@@ -14,9 +15,7 @@ app.use("/pastes/:pasteId", (req, res, next) => {
   }
 });
 
-app.get("/pastes", (req, res) => {
-  res.json({ data: pastes });
-});
+app.use("/pastes", pastesRouter);
 
 function bodyHasTextProperty(req, res, next) {
   const { data: { text } = {} } = req.body;
