@@ -4,7 +4,6 @@ const pastes = require("./data/pastes-data");
 const pastesRouter = require("./pastes/pastes.router");
 
 // TODO: Follow instructions in the checkpoint to implement ths API.
-router.route("/:pasteId").get(controller.read);
 
 app.use("/pastes", pastesRouter);
 

@@ -93,6 +93,29 @@ function expirationIsValidNumber(req, res, next) {
   next();
 }
 
+function update(req, res) {
+  const { pasteId } = req.params;
+  const foundPaste = pastes.find((paste) => paste.id === Number(pasteId));
+  const { data: { name, syntax, expiration, exposure, text } = {} } = req.body;
+
+  // Update the paste
+  foundPaste.name = name;
+  foundPaste.syntax = syntax;
+  foundPaste.expiration = expiration;
+  foundPaste.exposure = exposure;
+  foundPaste.text = text;
+
+  res.json({ data: foundPaste });
+}
+
+function destroy(req, res) {
+  const { pasteId } = req.params;
+  const index = pastes.findIndex((paste) => paste.id === Number(pasteId));
+  // `splice()` returns an array of the deleted elements, even if it is one element
+  const deletedPastes = pastes.splice(index, 1);
+  res.sendStatus(204);
+}
+
 module.exports = {
   create: [
     bodyDataHas("name"),
@@ -108,4 +131,17 @@ module.exports = {
   ],
   list,
   read: [pasteExists, read],
+  update: [
+    pasteExists,
+    bodyDataHas("name"),
+    bodyDataHas("syntax"),
+    bodyDataHas("exposure"),
+    bodyDataHas("expiration"),
+    bodyDataHas("text"),
+    exposurePropertyIsValid,
+    syntaxPropertyIsValid,
+    expirationIsValidNumber,
+    update,
+  ],
+  delete: [pasteExists, destroy],
 };
